@@ -1,14 +1,14 @@
 ## Part 1 : Introduction to Listings
 
-Hello Flutter people! I’m back with a brand-new Flutter blog series — and this one is going to be special. We’re diving into a topic you’ll find in just about every real-world app: **listings**. Whether you’re displaying products, contacts, messages, or in our case, Pokémon *(a.k.a. the greatest thing in the world)*, building smooth, scalable lists is a core skill for any Flutter developer.
+Hello Flutter people! I’m back with a brand-new Flutter blog series, and this one is going to be special. We’re diving into a topic you’ll find in just about every real-world app: **listings**. Whether you’re displaying products, contacts, messages, or in our case, Pokémon *(a.k.a. the greatest thing in the world)*, building smooth, scalable lists is a core skill for any Flutter developer.
 
 In this first part of the series, we’ll focus on how to fetch and display data using Flutter + Bloc, and build a list that updates in real time, handles state efficiently, and delivers a great user experience. We’ll dive into ListView.builder, state management patterns, performance optimizations, and even sprinkle in some UI polish, all using the [PokéAPI](https://pokeapi.co/) as our data source.
 
-Ready to catch ’em all? Or should I say... display them all? Eh, forget about it — let’s get started with our Pokédex. 😅
+Ready to catch ’em all? Or should I say... display them all? Eh, forget about it, let’s get started with our Pokédex. 😅
 
 ![Let's go](https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-1-listing/assets/article/ash.gif?raw=true)
 
-## What are we building
+## What are we building?
 
 Before we dive into the code, let’s take a moment to understand what we’re building and how it all comes together.
 
@@ -23,7 +23,7 @@ The PokéAPI gives us everything we need, but not in a single request. Instead, 
 1. The first call gives us a list of Pokémon URLs, just enough to know which ones are available.
 2. The second call fetches the details of each Pokémon individually using those URLs (name, ID, types, image, and more).
 
-It might sound like extra work, but trust me — this gives us the flexibility to load detailed data only when we need it. It’s a great example of working with a two-step API flow, which you’ll run into often when working with public APIs or pagination.
+It might sound like extra work, but trust me, this gives us the flexibility to load detailed data only when we need it. It’s a great example of working with a two-step API flow, which you’ll run into often when working with public APIs or pagination.
 
 ## How do we handle those API calls?
 
@@ -139,7 +139,7 @@ if (state is PokemonListSuccess) {
 - `itemCount` tells Flutter how many items it should expect
 - `itemBuilder` gets called only when a new widget is needed
 
-Flutter recycles previously built widgets as you scroll, this is why **ListView.builder** is so memory-efficient. This is pretty awesomeif you ask me. But can we make it even more awesome?? Well, in Flutter everything is possible.
+Flutter recycles previously built widgets as you scroll, this is why **ListView.builder** is so memory-efficient. This is pretty awesome if you ask me. But can we make it even more awesome?? Well, in Flutter everything is possible.
 
 What if I told you... we could control how many pixels ahead Flutter preloads your list items?
 
@@ -149,7 +149,7 @@ The `cacheExtent` controls the number of pixels outside the visible area that Fl
 
 By default, `cacheExtent` is set to 250 pixels, which works fine in many cases. But depending on your UI, this number might need some tuning. This is a powerful tool, but it comes with responsibility. It’s important to adjust it based on your specific scenario:
 
-- If your list items are small, lightweight, or don’t use heavy assets like images — the default value might be perfect.
+- If your list items are small, lightweight, or don’t use heavy assets like images, the default value might be perfect.
 - If your list items are larger, or you're using images, shimmer loaders, or animated widgets, you may want to increase the cacheExtent to something like **300–600** pixels for a smoother UX.
 
 ![Cache Extend](https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-1-listing/assets/article/cache_extend.png?raw=true)
