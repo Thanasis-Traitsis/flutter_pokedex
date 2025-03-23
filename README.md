@@ -1,6 +1,4 @@
-# The Ultimate Guide to Flutter Lists with Bloc : Part 1
-
-## Part 1 : Introduction to Listing
+## Part 1 : Introduction to Listings
 
 Hello Flutter people! I’m back with a brand-new Flutter blog series — and this one is going to be special. We’re diving into a topic you’ll find in just about every real-world app: **listings**. Whether you’re displaying products, contacts, messages, or in our case, Pokémon *(a.k.a. the greatest thing in the world)*, building smooth, scalable lists is a core skill for any Flutter developer.
 
@@ -8,7 +6,7 @@ In this first part of the series, we’ll focus on how to fetch and display data
 
 Ready to catch ’em all? Or should I say... display them all? Eh, forget about it — let’s get started with our Pokédex. 😅
 
-[INSERT GIF WITH ASH ROTATING HIS HAT]
+![Let's go](https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-1-listing/assets/article/ash.gif?raw=true)
 
 ## What are we building
 
@@ -154,6 +152,8 @@ By default, `cacheExtent` is set to 250 pixels, which works fine in many cases. 
 - If your list items are small, lightweight, or don’t use heavy assets like images — the default value might be perfect.
 - If your list items are larger, or you're using images, shimmer loaders, or animated widgets, you may want to increase the cacheExtent to something like **300–600** pixels for a smoother UX.
 
+![Cache Extend](https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-1-listing/assets/article/cache_extend.png?raw=true)
+
 ⚠️ Tip: Going too high on `cacheExtent` may lead to increased memory usage, especially with complex lists. Try to keep it below **600** unless you’ve benchmarked for your specific case.
 
 ### Extra Pro Tip: Add Keys to Your List Items
@@ -254,6 +254,8 @@ So yes, we’re using the same state type (`PokemonListSuccess`) again, but with
 
 And there you have it! We’ve built a clean, efficient, and scalable listing system using Bloc, Equatable, and Flutter’s powerful rendering engine.
 
+![Final Result](https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-1-listing/assets/article/pokemon_listing.png?raw=true)
+
 From setting up the API flow with the PokéAPI, to handling list state with Bloc, and finally making the list interactive with favorite toggles, we’ve covered the essential concepts that power most real-world listing features in mobile apps.
 
 This wasn’t just about displaying some data. We explored how to:
@@ -266,7 +268,7 @@ If you’ve followed along this far, congratulations! You’ve just added anothe
 
 If you enjoyed this article and want to stay connected, feel free to connect with me on [LinkedIn](https://www.linkedin.com/in/thanasis-traitsis/).
 
-If you'd like to dive deeper into the code and contribute to the project, visit the repository on [GitHub](https://github.com/Thanasis-Traitsis/flutter_card_flip).
+If you'd like to dive deeper into the code and contribute to the project, visit the repository on [GitHub](https://github.com/Thanasis-Traitsis/flutter_pokedex/tree/part-1-listing).
 
 Was this guide helpful? Consider buying me a coffee!☕️ Your contribution goes a long way in fuelling future content and projects. [Buy Me a Coffee](https://www.buymeacoffee.com/thanasis_traitsis).
 
