@@ -1,6 +1,6 @@
 # The Ultimate Guide to Flutter Lists with Bloc : Part 1
 
-## Part 1 : Introduction to Listings
+## Part 1 : Introduction to Listing
 
 Hello Flutter people! I’m back with a brand-new Flutter blog series — and this one is going to be special. We’re diving into a topic you’ll find in just about every real-world app: **listings**. Whether you’re displaying products, contacts, messages, or in our case, Pokémon *(a.k.a. the greatest thing in the world)*, building smooth, scalable lists is a core skill for any Flutter developer.
 
