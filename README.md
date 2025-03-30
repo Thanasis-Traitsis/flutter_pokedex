@@ -317,10 +317,6 @@ class _PokemonListingSuccessState extends State<PokemonListingSuccess> {
 
 That's it everybody! We have successfully delivered the best scrolling experience using Flutter + Bloc, completely from scratch. Not only did we manage to trigger pagination based on the list index, but we also **prefetched multiple pages upfront** to provide a truly seamless user experience.
 
-<video width="320" height="240" controls>
-  <source src="https://github.com/Thanasis-Traitsis/flutter_pokedex/blob/part-2-pagination/assets/article/Pokedex_scroll.mov" type="video/mp4">
-</video>
-
 This isn’t just a pagination strategy, it’s the foundation of how modern apps deliver seamless, high-performance data loading at scale.
 
 Whether you're listing products, social feeds, restaurants, or Pokémon, this is a blueprint you can reuse again and again.
