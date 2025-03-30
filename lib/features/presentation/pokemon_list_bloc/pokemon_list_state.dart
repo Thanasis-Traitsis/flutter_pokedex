@@ -13,11 +13,12 @@ final class PokemonListLoading extends PokemonListState {}
 
 final class PokemonListSuccess extends PokemonListState {
   final List<PokemonEntity> pokemons;
+  final int pagination;
 
-  const PokemonListSuccess({required this.pokemons});
+  const PokemonListSuccess({required this.pokemons, required this.pagination});
 
   @override
-  List<Object> get props => [pokemons];
+  List<Object> get props => [pagination];
 }
 
 final class PokemonListError extends PokemonListState {

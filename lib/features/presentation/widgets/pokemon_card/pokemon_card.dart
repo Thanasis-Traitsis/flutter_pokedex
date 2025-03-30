@@ -43,18 +43,24 @@ class PokemonCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(pokemon.name.capitalize(),
-                            style: Theme.of(context).textTheme.titleMedium),
-                        SizedBox(
-                          height: AppSpacing.xs,
-                        ),
-                        PokemonCardTypes(
-                          pokeTypes: pokemon.types,
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            pokemon.name.formatPokemonName(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          SizedBox(
+                            height: AppSpacing.xs,
+                          ),
+                          PokemonCardTypes(
+                            pokeTypes: pokemon.types,
+                          ),
+                        ],
+                      ),
                     ),
                     PokemonCardFavoriteIcon(
                       isFavorite: pokemon.isFavorite,

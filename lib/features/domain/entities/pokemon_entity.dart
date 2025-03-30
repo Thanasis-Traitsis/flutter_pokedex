@@ -4,7 +4,7 @@ class PokemonEntity {
   final String id;
   final String name;
   final List<PokemonType> types;
-  final String image;
+  final String? image;
   final bool isFavorite;
 
   const PokemonEntity({

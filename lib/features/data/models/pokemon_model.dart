@@ -36,5 +36,5 @@ PokemonType pokemonTypeFromString(String type) {
 }
 
 String convertPokemonId(int id) {
-  return id.toString().padLeft(4, '0');
+  return id.toString().padLeft(5, '0');
 }

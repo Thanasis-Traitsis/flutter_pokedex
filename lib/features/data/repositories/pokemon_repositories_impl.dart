@@ -9,10 +9,10 @@ import 'package:http/http.dart' as http;
 
 class PokemonRepositoriesImpl implements PokemonRepositories {
   @override
-  Future<List<String>> fetchPokemonUrls(int pokemon) async {
+  Future<List<String>> fetchPokemonUrls({required int limit,required int offset}) async {
     final PokemonUrlsListModel pokemonUrls;
     try {
-       final Uri url = Uri.parse("${ApiConstants.pokemonList}?limit=$pokemon&offset=0");
+       final Uri url = Uri.parse("${ApiConstants.pokemonList}?limit=$limit&offset=$offset");
 
 
       var response = await http.get(url);

@@ -13,6 +13,8 @@ class InitialFetch extends PokemonListEvent {
   const InitialFetch(this.firstPokemon);
 }
 
+class FetchNextPage extends PokemonListEvent {}
+
 class ToggleFavoriteStatus extends PokemonListEvent {
   final String pokemonId;
 
