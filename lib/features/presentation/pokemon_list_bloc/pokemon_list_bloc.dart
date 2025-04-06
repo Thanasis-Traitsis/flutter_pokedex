@@ -13,6 +13,8 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   int offset = 0;
   final int limit = 30;
 
+  bool canFetchMore = true;
+
   PokemonListBloc() : super(PokemonListInitial()) {
     on<InitialFetch>(_onInitialPokemonFetch);
     on<FetchNextPage>(_onFetchNextPage);
@@ -52,27 +54,30 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
 
   Future<void> _fetchPokemons(Emitter<PokemonListState> emit,
       {int? chosenLimit}) async {
-    try {
-      final List<String> pokemonUrls = await PokemonRepositories()
-          .fetchPokemonUrls(limit: chosenLimit ?? limit, offset: offset);
+    if (canFetchMore) {
+      try {
+        final List<String> pokemonUrls = await PokemonRepositories()
+            .fetchPokemonUrls(limit: chosenLimit ?? limit, offset: offset);
 
-      if (pokemonUrls.isNotEmpty) {
-        final List<PokemonEntity?> fetchedPokemons = await Future.wait(
-            pokemonUrls
-                .map((url) => PokemonRepositories().fetchPokemonDetails(url)));
+        if (pokemonUrls.isNotEmpty) {
+          final List<PokemonEntity?> fetchedPokemons = await Future.wait(
+              pokemonUrls.map(
+                  (url) => PokemonRepositories().fetchPokemonDetails(url)));
 
-        pokemonList.addAll(fetchedPokemons.whereType<PokemonEntity>());
+          pokemonList.addAll(fetchedPokemons.whereType<PokemonEntity>());
 
-        pagination++;
-        offset += chosenLimit ?? limit;
+          pagination++;
+          offset += chosenLimit ?? limit;
 
-        emit(PokemonListSuccess(pokemons: pokemonList, pagination: pagination));
-      } else {
-        emit(PokemonListError(message: "There are no more pokemons"));
+          emit(PokemonListSuccess(
+              pokemons: pokemonList, pagination: pagination));
+        } else {
+          canFetchMore = false;
+        }
+      } catch (e) {
+        emit(PokemonListError(
+            message: "Failed to fetch Pokémon: ${e.toString()}"));
       }
-    } catch (e) {
-      emit(PokemonListError(
-          message: "Failed to fetch Pokémon: ${e.toString()}"));
     }
   }
 }

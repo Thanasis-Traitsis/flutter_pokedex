@@ -29,7 +29,7 @@ class PokemonCard extends StatelessWidget {
         borderRadius: AppDecoration.cardBorderRadius,
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           PokemonCardImage(pokemon.image),
           SizedBox(
