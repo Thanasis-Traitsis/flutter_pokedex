@@ -7,6 +7,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color backgroundColor;
   final Color textColor;
   final Color primaryColor;
+  final Color grayColor;
   final Color favoriteActive;
   final Color favoriteInactive;
 
@@ -16,6 +17,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.backgroundColor,
     required this.textColor,
     required this.primaryColor,
+    required this.grayColor,
     required this.favoriteActive,
     required this.favoriteInactive,
   });
@@ -25,7 +27,8 @@ class AppColors extends ThemeExtension<AppColors> {
     blackColor: const Color(0xff000000),
     backgroundColor: const Color(0xffFFFFFF),
     textColor: const Color.fromARGB(255, 46, 45, 45),
-    primaryColor: const Color(0xff000000),
+    primaryColor: const Color.fromARGB(255, 22, 52, 174),
+    grayColor: const Color.fromARGB(255, 184, 182, 182),
     favoriteActive: const Color(0xffE53935),
     favoriteInactive: const Color(0xffBDBDBD),
   );
@@ -37,6 +40,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? backgroundColor,
     Color? textColor,
     Color? primaryColor,
+    Color? grayColor,
     Color? favoriteActive,
     Color? favoriteInactive,
   }) {
@@ -46,6 +50,7 @@ class AppColors extends ThemeExtension<AppColors> {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       textColor: textColor ?? this.textColor,
       primaryColor: primaryColor ?? this.primaryColor,
+      grayColor: grayColor ?? this.grayColor,
       favoriteActive: favoriteActive ?? this.favoriteActive,
       favoriteInactive: favoriteInactive ?? this.favoriteInactive,
     );
@@ -61,6 +66,7 @@ class AppColors extends ThemeExtension<AppColors> {
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
       textColor: Color.lerp(textColor, other.textColor, t)!,
       primaryColor: Color.lerp(primaryColor, other.primaryColor, t)!,
+      grayColor: Color.lerp(grayColor, other.grayColor, t)!,
       favoriteActive: Color.lerp(favoriteActive, other.favoriteActive, t)!,
       favoriteInactive:
           Color.lerp(favoriteInactive, other.favoriteInactive, t)!,

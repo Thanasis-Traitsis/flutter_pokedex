@@ -18,10 +18,16 @@ class AppTheme {
         surface: chosenColor.backgroundColor,
         onPrimary: chosenColor.blackColor,
         onSurface: chosenColor.whiteColor,
+        surfaceContainerLow: chosenColor.grayColor,
       ),
       textTheme: TextTheme(
         titleMedium: TextStyle(
           fontSize: AppSizes.titleNormal,
+          color: chosenColor.textColor,
+          fontWeight: FontWeight.bold,
+        ),
+        titleSmall: TextStyle(
+          fontSize: AppSizes.titleSmall,
           color: chosenColor.textColor,
           fontWeight: FontWeight.bold,
         ),

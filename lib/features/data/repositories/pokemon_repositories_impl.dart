@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc_pagination/core/constants/api/api_constants.dart';
+import 'package:bloc_pagination/core/constants/app_strings.dart';
 import 'package:bloc_pagination/features/data/models/pokemon_model.dart';
 import 'package:bloc_pagination/features/data/models/pokemon_urls_list_model.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
@@ -26,7 +27,7 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
 
       return [];
     } catch (e) {
-      throw Exception("Unable to load pokemon urls: $e");
+      throw Exception("${AppStrings.unableToLoadUrls}: $e");
     }
   }
 
@@ -50,7 +51,7 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
 
       return null;
     } catch (e) {
-      throw Exception("Unable to load pokemon details: $e");
+      throw Exception("${AppStrings.unableToLoadDetails}: $e");
     }
   }
 }

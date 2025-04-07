@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_pagination/core/constants/app_strings.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -76,7 +77,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
         }
       } catch (e) {
         emit(PokemonListError(
-            message: "Failed to fetch Pokémon: ${e.toString()}"));
+            message: "${AppStrings.failedToFetch}: ${e.toString()}"));
       }
     }
   }
