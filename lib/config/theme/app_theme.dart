@@ -10,7 +10,6 @@ class AppTheme {
   );
 
   ThemeData getTheme() {
-
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
@@ -18,7 +17,7 @@ class AppTheme {
         surface: chosenColor.backgroundColor,
         onPrimary: chosenColor.blackColor,
         onSurface: chosenColor.whiteColor,
-        surfaceContainerLow: chosenColor.grayColor,
+        surfaceContainer: chosenColor.grayColor,
       ),
       textTheme: TextTheme(
         titleMedium: TextStyle(
@@ -34,6 +33,11 @@ class AppTheme {
         bodyMedium: TextStyle(
           fontSize: AppSizes.textNormal,
           color: chosenColor.textColor,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all(chosenColor.whiteColor),
         ),
       ),
       extensions: <ThemeExtension<dynamic>>[

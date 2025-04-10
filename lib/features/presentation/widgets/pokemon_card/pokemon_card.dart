@@ -23,7 +23,7 @@ class PokemonCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          color: Theme.of(context).colorScheme.surfaceContainer,
           width: AppDecoration.cardBorderWidth,
         ),
         borderRadius: AppDecoration.cardBorderRadius,

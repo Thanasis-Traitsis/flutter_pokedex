@@ -10,7 +10,7 @@ class PokemonFilterDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: AppSpacing.md),
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      color: Theme.of(context).colorScheme.surfaceContainer,
       width: AppDecoration.filterDividerWidth,
       height: AppValues.filterButtonSize,
     );

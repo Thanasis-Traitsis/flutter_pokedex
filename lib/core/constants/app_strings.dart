@@ -8,4 +8,5 @@ class AppStrings {
   static const String filterHeader = 'Filter Options';
   static const String filterFavoriteTitle = 'Favorites';
   static const String filterToggleFavoritesText = 'Show favorite Pokémon only';
+  static const String applyFiltersButtonText = 'Apply';
 }

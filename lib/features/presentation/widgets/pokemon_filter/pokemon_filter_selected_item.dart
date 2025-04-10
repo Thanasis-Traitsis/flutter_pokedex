@@ -1,11 +1,18 @@
-import 'package:bloc_pagination/core/constants/app_decoration.dart';
-import 'package:bloc_pagination/core/constants/app_spacing.dart';
-import 'package:bloc_pagination/core/constants/app_values.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:bloc_pagination/core/constants/app_decoration.dart';
+import 'package:bloc_pagination/core/constants/app_spacing.dart';
+import 'package:bloc_pagination/core/constants/app_values.dart';
+
 class PokemonFilterSelectedItem extends StatelessWidget {
-  const PokemonFilterSelectedItem({super.key});
+  final String filterTitle;
+
+  const PokemonFilterSelectedItem({
+    super.key,
+    required this.filterTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,7 @@ class PokemonFilterSelectedItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Favourite",
+            filterTitle,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(

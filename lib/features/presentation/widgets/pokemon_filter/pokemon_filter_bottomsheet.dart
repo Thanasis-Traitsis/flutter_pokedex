@@ -35,11 +35,13 @@ class PokemonFilterBottomsheet extends StatelessWidget {
             ),
             TogglePokemonFavoriteCheckbox(),
             Center(
-              child: ElevatedButton(
+              child: FilledButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Apply'),
+                child: Text(
+                  AppStrings.applyFiltersButtonText,
+                ),
               ),
             ),
           ],

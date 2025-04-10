@@ -15,6 +15,7 @@ class _TogglePokemonFavoriteCheckboxState
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
+      checkColor: Theme.of(context).colorScheme.surface,
       contentPadding: EdgeInsets.zero,
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
