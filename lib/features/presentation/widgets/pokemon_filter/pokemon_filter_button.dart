@@ -1,6 +1,6 @@
 import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_values.dart';
-import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pokemon_filter_bottomsheet.dart';
+import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pokemon_filter_bottomsheet/pokemon_filter_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -17,9 +17,9 @@ class PokemonFilterButton extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(20),
+                top: AppDecoration.filterBottomSheetRadius,
               ),
             ),
             backgroundColor: Theme.of(context).colorScheme.surface,
@@ -40,7 +40,7 @@ class PokemonFilterButton extends StatelessWidget {
           height: AppValues.filterButtonSize,
           alignment: Alignment.center,
           child: FaIcon(
-            FontAwesomeIcons.barsStaggered,
+            FontAwesomeIcons.sliders,
             size: AppValues.filterIconSize,
             color: Theme.of(context).colorScheme.surface,
           ),

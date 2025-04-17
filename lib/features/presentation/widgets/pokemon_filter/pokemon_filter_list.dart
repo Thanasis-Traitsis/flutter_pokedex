@@ -1,6 +1,6 @@
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
+import 'package:bloc_pagination/core/utils/filter_chip_utils.dart';
 import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
-import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pokemon_filter_selected_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,17 +14,34 @@ class PokemonFilterList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: BlocBuilder<PokemonFilterBloc, PokemonFilterState>(
           builder: (context, state) {
-            return Row(
-              children: List.generate(
-                state.selectedFilters.length,
-                (index) => Padding(
+            final List<Widget> filterChips = [];
+
+            print(filterChips);
+
+            state.selectedFilters.entries.forEach((filter) {
+              if (filter.value is Iterable) {
+                for (String val in filter.value) {
+                  filterChips.add(Padding(
+                    padding: EdgeInsets.only(
+                      left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
+                    ),
+                    child: shapeFilterChip(key: filter.key, value: val),
+                  ));
+                }
+              } else {
+                filterChips.add(Padding(
                   padding: EdgeInsets.only(
-                      left: index == 0 ? AppSpacing.md : AppSpacing.xs,
-                      right: index < state.selectedFilters.length - 1
-                          ? 0
-                          : AppSpacing.screenPadding),
-                  child: PokemonFilterSelectedItem(filterTitle: state.selectedFilters[index]),
-                ),
+                    left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
+                  ),
+                  child: shapeFilterChip(key: filter.key, value: filter.value),
+                ));
+              }
+            });
+
+            return Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.screenPadding),
+              child: Row(
+                children: filterChips,
               ),
             );
           },

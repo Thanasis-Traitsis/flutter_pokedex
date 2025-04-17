@@ -1,16 +1,16 @@
 part of 'pokemon_filter_bloc.dart';
 
 final class PokemonFilterState extends Equatable {
-  final Set<String> selectedFilters;
+  final Map<String, dynamic> selectedFilters;
 
   const PokemonFilterState({this.selectedFilters = const {}});
 
-  PokemonFilterState copyWith({Set<String>? selectedFilters}) {
+  PokemonFilterState copyWith({Map<String, dynamic>? selectedFilters}) {
     return PokemonFilterState(
       selectedFilters: selectedFilters ?? this.selectedFilters,
     );
   }
 
   @override
-  List<Object> get props => [selectedFilters];
+  List<Object> get props => [selectedFilters[AppStrings.filterStateTypesKey]];
 }

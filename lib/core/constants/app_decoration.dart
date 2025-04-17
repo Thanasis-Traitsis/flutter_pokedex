@@ -9,4 +9,5 @@ class AppDecoration {
   static double filterDividerWidth = 1.0;
   static BorderRadius get filterButtonRadius => BorderRadius.circular(10.0);
   static BorderRadius get filterSelectedItemRadius => BorderRadius.circular(15.0);
+  static Radius get filterBottomSheetRadius => Radius.circular(20.0);
 }

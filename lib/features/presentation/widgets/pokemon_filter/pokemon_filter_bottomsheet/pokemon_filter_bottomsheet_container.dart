@@ -1,10 +1,16 @@
+import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
-import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/toggle_pokemon_favorite_checkbox.dart';
 import 'package:flutter/material.dart';
 
-class PokemonFilterBottomsheet extends StatelessWidget {
-  const PokemonFilterBottomsheet({super.key});
+class PokemonFilterBottomsheetContainer extends StatelessWidget {
+  final List<Widget> pokemonFilterCategories;
+  final VoidCallback applyButtonOnPressed;
+
+  const PokemonFilterBottomsheetContainer(
+      {super.key,
+      required this.pokemonFilterCategories,
+      required this.applyButtonOnPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +31,17 @@ class PokemonFilterBottomsheet extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: AppSpacing.xs),
-            const Divider(
-              thickness: 1,
-            ),
+            Divider(thickness: AppDecoration.filterDividerWidth),
             const SizedBox(height: AppSpacing.xs),
-            Text(
-              "${AppStrings.filterFavoriteTitle}:",
-              style: Theme.of(context).textTheme.titleSmall,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: pokemonFilterCategories,
             ),
-            TogglePokemonFavoriteCheckbox(),
+            const SizedBox(height: AppSpacing.md),
             Center(
               child: FilledButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  AppStrings.applyFiltersButtonText,
-                ),
+                onPressed: applyButtonOnPressed,
+                child: Text(AppStrings.applyFiltersButtonText),
               ),
             ),
           ],
