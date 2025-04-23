@@ -12,13 +12,44 @@ final class PokemonListInitial extends PokemonListState {}
 final class PokemonListLoading extends PokemonListState {}
 
 final class PokemonListSuccess extends PokemonListState {
-  final List<PokemonEntity> pokemons;
+  final Map<String, PokemonEntity> pokemonMap;
   final int pagination;
+  final int favoritePokemons;
+  final bool showOnlyFavorites;
+  final Set<String> selectedTypes;
 
-  const PokemonListSuccess({required this.pokemons, required this.pagination});
+  const PokemonListSuccess({
+    required this.pokemonMap,
+    this.pagination = 0,
+    this.favoritePokemons = 0,
+    this.showOnlyFavorites = false,
+    this.selectedTypes = const {},
+  });
+
+  List<PokemonEntity> get displayedPokemons {
+    if (!showOnlyFavorites && selectedTypes.isEmpty) {
+      return pokemonMap.values.toList();
+    }
+    
+    return pokemonMap.values.where((pokemon) {
+      bool matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
+      bool matchesType = selectedTypes.isEmpty || 
+                         pokemon.types.any((type) => selectedTypes.contains(type));
+      return matchesFavorite && matchesType;
+    }).toList();
+  }
 
   @override
-  List<Object> get props => [pagination];
+  List<Object> get props => [pokemonMap, pagination, favoritePokemons, showOnlyFavorites, selectedTypes];
+}
+
+final class PokemonListEmpty extends PokemonListState {
+  final String message;
+
+  const PokemonListEmpty({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }
 
 final class PokemonListError extends PokemonListState {

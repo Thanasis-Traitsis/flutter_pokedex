@@ -12,5 +12,5 @@ final class PokemonFilterState extends Equatable {
   }
 
   @override
-  List<Object> get props => [selectedFilters[AppStrings.filterStateTypesKey]];
+  List<Object> get props => [selectedFilters];
 }

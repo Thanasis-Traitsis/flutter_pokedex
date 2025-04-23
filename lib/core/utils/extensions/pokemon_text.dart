@@ -3,8 +3,8 @@ extension StringExtension on String {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 
-  String intoId() {
-    return "# $this";
+  String convertPokemonId() {
+    return "# ${padLeft(5, '0')}";
   }
 
   String formatPokemonName() {

@@ -7,17 +7,12 @@ sealed class PokemonFilterEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ToggleFavoriteFilter extends PokemonFilterEvent {}
+class ToggleFilter extends PokemonFilterEvent {
+  final bool? showFavorites;
+  final Set<String>? types;
 
-class ToggleTypeFilter extends PokemonFilterEvent {
-  final Set<String> types;
-
-  const ToggleTypeFilter(this.types);
-
-  @override
-  List<Object> get props => [types];
+  const ToggleFilter({this.showFavorites, this.types});
 }
-
 
 class RemoveFilter extends PokemonFilterEvent {
   final String filterKey;
@@ -25,3 +20,5 @@ class RemoveFilter extends PokemonFilterEvent {
 
   const RemoveFilter({required this.filterKey, required this.valueToRemove});
 }
+
+class RemoveAllFilters extends PokemonFilterEvent {}

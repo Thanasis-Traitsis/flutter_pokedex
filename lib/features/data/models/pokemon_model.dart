@@ -7,17 +7,20 @@ class PokemonModel extends PokemonEntity {
     required super.name,
     required super.types,
     required super.image,
-    super.isFavorite = false,
+    required super.isFavorite,
   });
 
-  factory PokemonModel.fromJson(Map<String, dynamic> json) {
+  factory PokemonModel.fromJson(Map<String, dynamic> json, List<String> favoritePokemons) {
+    final String id = json["id"].toString();
+    
     return PokemonModel(
-      id: convertPokemonId(json["id"]),
+      id: id,
       name: json["name"],
       types: (json["types"] as List)
           .map((type) => pokemonTypeFromString(type["type"]["name"]))
           .toList(),
       image: json["sprites"]["front_default"],
+      isFavorite: favoritePokemons.contains(id)
     );
   }
 
@@ -33,8 +36,4 @@ PokemonType pokemonTypeFromString(String type) {
     (e) => e.name == type,
     orElse: () => PokemonType.normal, 
   );
-}
-
-String convertPokemonId(int id) {
-  return id.toString().padLeft(5, '0');
 }

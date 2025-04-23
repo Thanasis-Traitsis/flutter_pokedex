@@ -10,11 +10,12 @@ import 'package:http/http.dart' as http;
 
 class PokemonRepositoriesImpl implements PokemonRepositories {
   @override
-  Future<List<String>> fetchPokemonUrls({required int limit,required int offset}) async {
+  Future<List<String>> fetchPokemonUrls(
+      {required int limit, required int offset}) async {
     final PokemonUrlsListModel pokemonUrls;
     try {
-       final Uri url = Uri.parse("${ApiConstants.pokemonList}?limit=$limit&offset=$offset");
-
+      final Uri url =
+          Uri.parse("${ApiConstants.pokemonList}?limit=$limit&offset=$offset");
 
       var response = await http.get(url);
 
@@ -32,7 +33,9 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
   }
 
   @override
-  Future<PokemonEntity?> fetchPokemonDetails(String pokemonUrl) async {
+  Future<PokemonEntity?> fetchPokemonDetails(
+      {required String pokemonUrl,
+      required List<String> favoritePokemons}) async {
     final PokemonEntity? pokemon;
 
     try {
@@ -40,11 +43,10 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
 
       var response = await http.get(url);
 
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        pokemon = PokemonModel.fromJson(data);
+        pokemon = PokemonModel.fromJson(data, favoritePokemons);
 
         return pokemon;
       }
@@ -53,5 +55,69 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
     } catch (e) {
       throw Exception("${AppStrings.unableToLoadDetails}: $e");
     }
+  }
+
+  @override
+  Future<List<PokemonEntity>> getFavoritePokemons({
+    required bool showFavorites,
+    required List<PokemonEntity> filteredList,
+    required List<String> favoriteIds,
+  }) async {
+    if (showFavorites) {
+      if (filteredList.isEmpty) {
+        final List<PokemonEntity?> favPokemons = await Future.wait(
+            favoriteIds.map((id) => fetchPokemonDetails(
+                pokemonUrl: ApiConstants.pokemonDetails(id),
+                favoritePokemons: favoriteIds)));
+
+        filteredList.addAll(favPokemons.whereType<PokemonEntity>());
+      } else {
+        for (PokemonEntity pokemon in filteredList) {
+          if (!pokemon.isFavorite) {
+            filteredList.remove(pokemon);
+          }
+        }
+      }
+    } else {
+      filteredList =
+          filteredList.where((pokemon) => !pokemon.isFavorite).toList();
+    }
+
+    return filteredList;
+  }
+
+  @override
+  Future<List<PokemonEntity>> getPokemonUrlFromType(
+      {required List<PokemonEntity> filteredList,
+      required Set<String> types,
+      required List<String> favoriteIds}) async {
+    for (String type in types) {
+      final PokemonUrlsListModel pokemonUrls;
+
+      try {
+        final Uri url = Uri.parse(ApiConstants.pokemonTypeList(type));
+
+        var response = await http.get(url);
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          pokemonUrls =
+              PokemonUrlsListModel.fromJson(data, searchForTypes: true);
+
+          print(pokemonUrls.urlList);
+
+          final List<PokemonEntity?> selectedTypePokmeons = await Future.wait(
+              pokemonUrls.urlList.map((url) => fetchPokemonDetails(
+                  pokemonUrl: url,
+                  favoritePokemons: favoriteIds)));
+
+          filteredList.addAll(selectedTypePokmeons.whereType<PokemonEntity>());
+        }
+      } catch (e) {
+        throw Exception("${AppStrings.unableToLoadUrls}: $e");
+      }
+    }
+
+    return filteredList;
   }
 }

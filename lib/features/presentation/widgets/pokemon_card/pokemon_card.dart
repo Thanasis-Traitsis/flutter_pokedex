@@ -1,6 +1,6 @@
 import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
-import 'package:bloc_pagination/core/utils/extensions/text_capitalize.dart';
+import 'package:bloc_pagination/core/utils/extensions/pokemon_text.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_favorite_icon.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_image.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_types.dart';
@@ -74,7 +74,7 @@ class PokemonCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    pokemon.id.intoId(),
+                    pokemon.id.convertPokemonId(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),

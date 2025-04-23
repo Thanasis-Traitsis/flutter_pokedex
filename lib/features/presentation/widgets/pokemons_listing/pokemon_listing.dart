@@ -11,14 +11,19 @@ class PokemonListing extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PokemonListBloc, PokemonListState>(
       builder: (context, state) {
-        if (state is PokemonListSuccess) {
-          return PokemonListingSuccess(pokemons: state.pokemons);
-        } else if (state is PokemonListError) {
-          return Center(
-            child: Text(state.message),
-          );
-        } else {
-          return PokemonListingLoading();
+        switch (state) {
+          case PokemonListSuccess success:
+            return PokemonListingSuccess(pokemons: success.displayedPokemons);
+          case PokemonListEmpty empty:
+            return Center(
+              child: Text(empty.message),
+            );
+          case PokemonListError error:
+            return Center(
+              child: Text(error.message),
+            );
+          default:
+            return PokemonListingLoading();
         }
       },
     );

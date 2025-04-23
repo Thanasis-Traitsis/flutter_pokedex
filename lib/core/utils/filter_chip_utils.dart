@@ -3,7 +3,7 @@ import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pok
 import 'package:flutter/material.dart';
 
 Widget? shapeFilterChip({required String key, required dynamic value}) {
-  if (key == AppStrings.filterStateFavoriteKey && value) {
+  if (key == AppStrings.filterStateFavoriteKey) {
     return PokemonFilterSelectedItem(
       filterTitle: AppStrings.filterFavoriteTitle,
       filterKey: key,

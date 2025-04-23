@@ -9,13 +9,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+
+  final filtersBloc = PokemonFilterBloc();
+  
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<PokemonListBloc>(
-        create: (context) => PokemonListBloc()..add(InitialFetch(50)),
+        create: (context) =>
+            PokemonListBloc(filtersBloc)..add(InitialFetch(20)),
       ),
       BlocProvider<PokemonFilterBloc>(
-        create: (context) => PokemonFilterBloc(),
+        create: (context) => filtersBloc,
       )
     ],
     child: const MainApp(),

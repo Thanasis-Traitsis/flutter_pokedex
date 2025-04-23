@@ -23,3 +23,10 @@ class ToggleFavoriteStatus extends PokemonListEvent {
   @override
   List<Object> get props => [pokemonId];
 }
+
+class ApplyFilters extends PokemonListEvent {
+  final bool showFavorites;
+  final Set<String> types;
+
+  const ApplyFilters({required this.showFavorites, required this.types});
+}

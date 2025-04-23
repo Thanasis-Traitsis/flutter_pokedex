@@ -18,11 +18,18 @@ class PokemonFilterController {
     final bloc = context.read<PokemonFilterBloc>();
     final state = bloc.state;
 
+    bool? showFavorites;
+
     if ((state.selectedFilters[AppStrings.filterStateFavoriteKey] ?? false) !=
         showOnlyFavorites) {
-      bloc.add(ToggleFavoriteFilter());
+      showFavorites = showOnlyFavorites;
     }
 
-    bloc.add(ToggleTypeFilter(selectedPokemonTypes));
+    if (selectedPokemonTypes.isNotEmpty) {
+      bloc.add(ToggleFilter(
+          showFavorites: showFavorites, types: selectedPokemonTypes));
+    } else {
+      bloc.add(ToggleFilter(showFavorites: showFavorites));
+    }
   }
 }

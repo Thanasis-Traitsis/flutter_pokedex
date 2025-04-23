@@ -3,4 +3,5 @@ class ApiConstants {
 
   static const String pokemonList = "$baseUrl/pokemon";
   static String pokemonDetails(String id) => "$baseUrl/pokemon/$id";
+  static String pokemonTypeList(String type) => "$baseUrl/type/$type";
 }

@@ -1,29 +1,57 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
+import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:bloc_pagination/features/domain/repositories/pokemon_repositories.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'pokemon_list_event.dart';
 part 'pokemon_list_state.dart';
 
 class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
-  final List<PokemonEntity> pokemonList = [];
+  final PokemonFilterBloc filterBloc;
+  late final StreamSubscription filterSubscription;
+  late final SharedPreferences prefs;
+  late final Set<String> favoriteIds;
+
+  final Map<String, PokemonEntity> pokemonMap = {};
   int pagination = 0;
   int offset = 0;
   final int limit = 30;
 
   bool canFetchMore = true;
+  bool showOnlyFavorites = false;
+  Set<String> selectedTypes = {};
 
-  PokemonListBloc() : super(PokemonListInitial()) {
+  PokemonListBloc(this.filterBloc) : super(PokemonListInitial()) {
+    filterSubscription = filterBloc.stream.listen((filterState) {
+      showOnlyFavorites =
+          filterState.selectedFilters[AppStrings.filterStateFavoriteKey] ??
+              false;
+      selectedTypes =
+          filterState.selectedFilters[AppStrings.filterStateTypesKey] ?? {};
+
+      add(ApplyFilters(
+        showFavorites: showOnlyFavorites,
+        types: selectedTypes,
+      ));
+    });
+
     on<InitialFetch>(_onInitialPokemonFetch);
     on<FetchNextPage>(_onFetchNextPage);
     on<ToggleFavoriteStatus>(_onToggleFavoriteStatus);
+    on<ApplyFilters>(_onApplyFilters);
   }
 
   void _onInitialPokemonFetch(
       InitialFetch event, Emitter<PokemonListState> emit) async {
+    prefs = await SharedPreferences.getInstance();
+    favoriteIds = Set<String>.from(
+        prefs.getStringList(AppStrings.prefsFavoritePokemonIds) ?? []);
+
     emit(PokemonListLoading());
     await _fetchPokemons(emit, chosenLimit: event.firstPokemon);
     await _fetchPokemons(emit);
@@ -36,23 +64,6 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
     await _fetchPokemons(emit);
   }
 
-  void _onToggleFavoriteStatus(
-      ToggleFavoriteStatus event, Emitter<PokemonListState> emit) {
-    pagination++;
-
-    for (int i = 0; i < pokemonList.length; i++) {
-      if (pokemonList[i].id == event.pokemonId) {
-        final updated = pokemonList[i].copyWith(
-          isFavorite: !pokemonList[i].isFavorite,
-        );
-        pokemonList[i] = updated;
-        break;
-      }
-    }
-
-    emit(PokemonListSuccess(pokemons: pokemonList, pagination: pagination));
-  }
-
   Future<void> _fetchPokemons(Emitter<PokemonListState> emit,
       {int? chosenLimit}) async {
     if (canFetchMore) {
@@ -62,16 +73,19 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
 
         if (pokemonUrls.isNotEmpty) {
           final List<PokemonEntity?> fetchedPokemons = await Future.wait(
-              pokemonUrls.map(
-                  (url) => PokemonRepositories().fetchPokemonDetails(url)));
+              pokemonUrls.map((url) => PokemonRepositories()
+                  .fetchPokemonDetails(
+                      pokemonUrl: url,
+                      favoritePokemons: favoriteIds.toList())));
 
-          pokemonList.addAll(fetchedPokemons.whereType<PokemonEntity>());
+          for (var pokemon in fetchedPokemons.whereType<PokemonEntity>()) {
+            pokemonMap[pokemon.id] = pokemon;
+          }
 
           pagination++;
           offset += chosenLimit ?? limit;
 
-          emit(PokemonListSuccess(
-              pokemons: pokemonList, pagination: pagination));
+          _emitSuccessState(emit);
         } else {
           canFetchMore = false;
         }
@@ -80,5 +94,55 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
             message: "${AppStrings.failedToFetch}: ${e.toString()}"));
       }
     }
+  }
+
+  void _onToggleFavoriteStatus(
+      ToggleFavoriteStatus event, Emitter<PokemonListState> emit) async {
+    try {
+      if (pokemonMap.containsKey(event.pokemonId)) {
+        final pokemon = pokemonMap[event.pokemonId]!;
+
+        final updatedPokemon =
+            pokemon.copyWith(isFavorite: !pokemon.isFavorite);
+
+        pokemonMap[event.pokemonId] = updatedPokemon;
+
+        if (updatedPokemon.isFavorite) {
+          favoriteIds.add(event.pokemonId);
+        } else {
+          favoriteIds.remove(event.pokemonId);
+        }
+
+        await prefs.setStringList(
+            AppStrings.prefsFavoritePokemonIds, favoriteIds.toList());
+
+        _emitSuccessState(emit);
+      }
+    } catch (e) {
+      emit(PokemonListError(
+          message: "Failed to update favorite status: ${e.toString()}"));
+    }
+  }
+
+  void _onApplyFilters(ApplyFilters event, Emitter<PokemonListState> emit) {
+
+    // TODO: How to make types filtering efficient and effective
+    _emitSuccessState(emit);
+  }
+
+  void _emitSuccessState(Emitter<PokemonListState> emit) {
+    emit(PokemonListSuccess(
+      pokemonMap: pokemonMap,
+      pagination: pagination,
+      favoritePokemons: favoriteIds.length,
+      showOnlyFavorites: showOnlyFavorites,
+      selectedTypes: selectedTypes,
+    ));
+  }
+
+  @override
+  Future<void> close() {
+    filterSubscription.cancel();
+    return super.close();
   }
 }
