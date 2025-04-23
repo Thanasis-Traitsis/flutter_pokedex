@@ -30,17 +30,24 @@ final class PokemonListSuccess extends PokemonListState {
     if (!showOnlyFavorites && selectedTypes.isEmpty) {
       return pokemonMap.values.toList();
     }
-    
+
     return pokemonMap.values.where((pokemon) {
       bool matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
-      bool matchesType = selectedTypes.isEmpty || 
-                         pokemon.types.any((type) => selectedTypes.contains(type));
+      bool matchesType = selectedTypes.isEmpty ||
+          pokemon.types.any((type) => selectedTypes.contains(type.name));
+
       return matchesFavorite && matchesType;
     }).toList();
   }
 
   @override
-  List<Object> get props => [pokemonMap, pagination, favoritePokemons, showOnlyFavorites, selectedTypes];
+  List<Object> get props => [
+        pokemonMap,
+        pagination,
+        favoritePokemons,
+        showOnlyFavorites,
+        selectedTypes
+      ];
 }
 
 final class PokemonListEmpty extends PokemonListState {
