@@ -113,8 +113,6 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
           favoriteIds.remove(event.pokemonId);
         }
 
-
-
         await prefs.setStringList(
             AppStrings.prefsFavoritePokemonIds, favoriteIds);
 
@@ -152,9 +150,35 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
           return;
         }
       }
-    }
+    } else if (selectedTypes.isNotEmpty && !showOnlyFavorites) {
+      final List<String> pokemonUrls =
+          await PokemonRepositories().getPokemonUrlFromType(
+        favoriteIds: favoriteIds,
+        types: selectedTypes,
+      );
 
-    print(selectedTypes);
+      final Set<String> extractUrls = {};
+      for (String url in pokemonUrls) {
+        final cleanUrl = url.substring(0, url.length - 1);
+
+        final segments = cleanUrl.split('/');
+        final lastSegment = segments.last;
+
+        if (!pokemonMap.keys.contains(lastSegment)) {
+          extractUrls.add(url);
+        }
+      }
+
+      final List<PokemonEntity?> fetchedPokemons =
+          await Future.wait(extractUrls.map((url) {
+        return PokemonRepositories().fetchPokemonDetails(
+            pokemonUrl: url, favoritePokemons: favoriteIds);
+      }));
+
+      for (var pokemon in fetchedPokemons.whereType<PokemonEntity>()) {
+        pokemonMap[pokemon.id] = pokemon;
+      }
+    }
 
     _emitSuccessState(emit);
   }
@@ -169,15 +193,15 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
     ));
   }
 
-  void _sortFavoriteIds() {
-    favoriteIds.sort((a, b) {
-      return int.parse(a).compareTo(int.parse(b));
-    });
-  }
-
   @override
   Future<void> close() {
     filterSubscription.cancel();
     return super.close();
+  }
+
+  void _sortFavoriteIds() {
+    favoriteIds.sort((a, b) {
+      return int.parse(a).compareTo(int.parse(b));
+    });
   }
 }
