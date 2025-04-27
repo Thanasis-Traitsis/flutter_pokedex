@@ -1,3 +1,5 @@
+import 'package:bloc_pagination/core/constants/app_spacing.dart';
+import 'package:bloc_pagination/core/constants/app_values.dart';
 import 'package:flutter/material.dart';
 
 class PokemonImageHeader extends StatelessWidget {
@@ -5,8 +7,13 @@ class PokemonImageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Image(
-      image: AssetImage("assets/images/pokemon.png"),
+    return Container(
+      alignment: Alignment.center,
+      height: AppValues.homeImageHeaderSize,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screenPadding),
+      child: Image(
+        image: AssetImage("assets/images/pokemon.png"),
+      ),
     );
   }
 }

@@ -25,7 +25,13 @@ class PokemonFilterController {
       showFavorites = showOnlyFavorites;
     }
 
+    final Set<String> oldTypes =
+        state.selectedFilters[AppStrings.filterStateTypesKey] ?? {};
+
     if (selectedPokemonTypes.isNotEmpty) {
+      bloc.add(ToggleFilter(
+          showFavorites: showFavorites, types: selectedPokemonTypes));
+    } else if (selectedPokemonTypes.isEmpty && oldTypes.isNotEmpty) {
       bloc.add(ToggleFilter(
           showFavorites: showFavorites, types: selectedPokemonTypes));
     } else {

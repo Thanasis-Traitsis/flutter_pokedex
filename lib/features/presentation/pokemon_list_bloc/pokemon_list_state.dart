@@ -26,18 +26,36 @@ final class PokemonListSuccess extends PokemonListState {
     this.selectedTypes = const {},
   });
 
-  List<PokemonEntity> get displayedPokemons {
+  List<PokemonEntity> getDisplayedPokemons(
+      {SortOption sortBy = SortOption.id}) {
+    List<PokemonEntity> pokemons;
+
     if (!showOnlyFavorites && selectedTypes.isEmpty) {
-      return pokemonMap.values.toList();
+      pokemons = pokemonMap.values.toList();
+    } else {
+      pokemons = pokemonMap.values.where((pokemon) {
+        bool matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
+        bool matchesType = selectedTypes.isEmpty ||
+            pokemon.types.any((type) => selectedTypes.contains(type.name));
+
+        return matchesFavorite && matchesType;
+      }).toList();
     }
 
-    return pokemonMap.values.where((pokemon) {
-      bool matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
-      bool matchesType = selectedTypes.isEmpty ||
-          pokemon.types.any((type) => selectedTypes.contains(type.name));
+    switch (sortBy) {
+      case SortOption.id:
+        pokemons.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+        break;
+      case SortOption.name:
+        pokemons.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case SortOption.type:
+        pokemons
+            .sort((a, b) => a.types.first.name.compareTo(b.types.first.name));
+        break;
+    }
 
-      return matchesFavorite && matchesType;
-    }).toList();
+    return pokemons;
   }
 
   @override
@@ -48,15 +66,6 @@ final class PokemonListSuccess extends PokemonListState {
         showOnlyFavorites,
         selectedTypes
       ];
-}
-
-final class PokemonListEmpty extends PokemonListState {
-  final String message;
-
-  const PokemonListEmpty({required this.message});
-
-  @override
-  List<Object> get props => [message];
 }
 
 final class PokemonListError extends PokemonListState {

@@ -1,3 +1,4 @@
+import 'package:bloc_pagination/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,26 +30,30 @@ class _PokemonListingSuccessState extends State<PokemonListingSuccess> {
           isFetchingMore = false;
         }
       },
-      child: ListView.builder(
-        cacheExtent: 350,
-        itemCount: widget.pokemons.length,
-        itemBuilder: (context, index) {
-          if (index >= widget.pokemons.length - 100 &&
-              widget.pokemons.length > 100) {
-            if (!isFetchingMore) {
-              isFetchingMore = true;
-              context.read<PokemonListBloc>().add(FetchNextPage());
-            }
-          }
-          return Container(
-            margin: EdgeInsets.only(top: index != 0 ? AppSpacing.md : 0),
-            child: PokemonCard(
-              key: ValueKey(widget.pokemons[index].id),
-              pokemon: widget.pokemons[index],
+      child: widget.pokemons.isEmpty
+          ? Center(
+              child: Text(AppStrings.emptyFiltersPokemon),
+            )
+          : ListView.builder(
+              cacheExtent: 350,
+              itemCount: widget.pokemons.length,
+              itemBuilder: (context, index) {
+                if (index >= widget.pokemons.length - 100 &&
+                    widget.pokemons.length > 100) {
+                  if (!isFetchingMore) {
+                    isFetchingMore = true;
+                    context.read<PokemonListBloc>().add(FetchNextPage());
+                  }
+                }
+                return Container(
+                  margin: EdgeInsets.only(top: index != 0 ? AppSpacing.md : 0),
+                  child: PokemonCard(
+                    key: ValueKey(widget.pokemons[index].id),
+                    pokemon: widget.pokemons[index],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

@@ -16,11 +16,7 @@ class PokemonsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.screenPadding),
-              child: PokemonImageHeader(),
-            ),
+            const PokemonImageHeader(),
             const SizedBox(
               height: AppSpacing.lg,
             ),

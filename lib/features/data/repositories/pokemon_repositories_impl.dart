@@ -58,8 +58,10 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
   }
 
   @override
-  Future<List<String>> getPokemonUrlFromType(
+  Future<Set<String>> getPokemonUrlFromType(
       {required Set<String> types, required List<String> favoriteIds}) async {
+    final Set<String> allUrls = {};
+
     for (String type in types) {
       final PokemonUrlsListModel pokemonUrls;
 
@@ -73,13 +75,13 @@ class PokemonRepositoriesImpl implements PokemonRepositories {
           pokemonUrls =
               PokemonUrlsListModel.fromJson(data, searchForTypes: true);
 
-          return pokemonUrls.urlList;
+          allUrls.addAll(pokemonUrls.urlList);
         }
       } catch (e) {
         throw Exception("${AppStrings.unableToLoadUrls}: $e");
       }
     }
-
-    return [];
+    
+    return allUrls;
   }
 }

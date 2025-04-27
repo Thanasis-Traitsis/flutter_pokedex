@@ -9,6 +9,6 @@ abstract class PokemonRepositories {
   Future<PokemonEntity?> fetchPokemonDetails(
       {required String pokemonUrl, required List<String> favoritePokemons});
 
-  Future<List<String>> getPokemonUrlFromType(
+  Future<Set<String>> getPokemonUrlFromType(
       {required Set<String> types, required List<String> favoriteIds});
 }
