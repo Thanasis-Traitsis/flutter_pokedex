@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_pagination/core/constants/api/api_constants.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
-import 'package:bloc_pagination/core/constants/sort_options.dart';
+import 'package:bloc_pagination/core/utils/url_utils.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
+import 'package:bloc_pagination/features/presentation/helpers/pokemon_display_helper.dart';
 import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -47,10 +48,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
         isFiltering = false;
       }
 
-      add(ApplyFilters(
-        showFavorites: showOnlyFavorites,
-        types: selectedTypes,
-      ));
+      add(ApplyFilters());
     });
 
     on<InitialFetch>(_onInitialPokemonFetch);
@@ -150,60 +148,21 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       ApplyFilters event, Emitter<PokemonListState> emit) async {
     emit(PokemonListLoading());
 
-    if (showOnlyFavorites) {
-      final unloadedFavoriteIds =
-          favoriteIds.where((id) => !filteredMap.containsKey(id));
-
-      if (unloadedFavoriteIds.isNotEmpty) {
-        try {
-          final List<PokemonEntity?> fetchedPokemons =
-              await Future.wait(unloadedFavoriteIds.map((id) {
-            final String url = ApiConstants.pokemonDetails(id);
-            return PokemonRepositories().fetchPokemonDetails(
-                pokemonUrl: url, favoritePokemons: favoriteIds);
-          }));
-
-          for (var pokemon in fetchedPokemons.whereType<PokemonEntity>()) {
-            filteredMap[pokemon.id] = pokemon;
-          }
-        } catch (e) {
-          emit(PokemonListError(
-              message: "Failed to load all favorite Pokemon: ${e.toString()}"));
-          return;
-        }
+    try {
+      if (showOnlyFavorites) {
+        await _loadUnloadedFavoritePokemons();
+      } else if (selectedTypes.isNotEmpty) {
+        await _loadPokemonsBySelectedTypes();
       }
-    } else if (selectedTypes.isNotEmpty && !showOnlyFavorites) {
-      final Set<String> pokemonUrls =
-          await PokemonRepositories().getPokemonUrlFromType(
-        favoriteIds: favoriteIds,
-        types: selectedTypes,
+
+      _emitSuccessState(
+        emit,
+        currentMap: isFiltering ? filteredMap : pokemonMap,
       );
-
-      final List<String> extractIds = [];
-      for (String url in pokemonUrls) {
-        final cleanUrl = url.substring(0, url.length - 1);
-
-        final segments = cleanUrl.split('/');
-        final lastSegment = segments.last;
-
-        if (!filteredMap.keys.contains(lastSegment)) {
-          extractIds.add(lastSegment);
-        }
-      }
-
-      final List<PokemonEntity?> fetchedPokemons =
-          await Future.wait(extractIds.map((id) {
-        return PokemonRepositories().fetchPokemonDetails(
-            pokemonUrl: ApiConstants.pokemonDetails(id),
-            favoritePokemons: favoriteIds);
-      }));
-
-      for (var pokemon in fetchedPokemons.whereType<PokemonEntity>()) {
-        filteredMap[pokemon.id] = pokemon;
-      }
+    } catch (e) {
+      emit(
+          PokemonListError(message: "${AppStrings.failedToLoad}: ${e.toString()}"));
     }
-
-    _emitSuccessState(emit, currentMap: isFiltering ? filteredMap : pokemonMap);
   }
 
   void _emitSuccessState(Emitter<PokemonListState> emit,
@@ -226,6 +185,50 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   void _sortListOfStrings(List<String> list) {
     list.sort((a, b) {
       return int.parse(a).compareTo(int.parse(b));
+    });
+  }
+
+  Future<void> _loadUnloadedFavoritePokemons() async {
+    final unloadedIds = favoriteIds.where((id) => !filteredMap.containsKey(id));
+
+    if (unloadedIds.isEmpty) return;
+
+    final List<PokemonEntity> fetchedPokemon = await _fetchPokemonEntitiesByIds(unloadedIds);
+    for (var pokemon in fetchedPokemon) {
+      filteredMap[pokemon.id] = pokemon;
+    }
+  }
+
+  Future<List<PokemonEntity>> _fetchPokemonEntitiesByIds(
+      Iterable<String> ids) async {
+    final results = await Future.wait(ids.map((id) {
+      return PokemonRepositories().fetchPokemonDetails(
+        pokemonUrl: ApiConstants.pokemonDetails(id),
+        favoritePokemons: favoriteIds,
+      );
+    }));
+
+    return results.whereType<PokemonEntity>().toList();
+  }
+
+  Future<void> _loadPokemonsBySelectedTypes() async {
+    final urls = await PokemonRepositories().getPokemonUrlFromType(
+      favoriteIds: favoriteIds,
+      types: selectedTypes,
+    );
+
+    final idsToFetch = _extractPokemonIdsFromUrls(urls)
+        .where((id) => !filteredMap.containsKey(id));
+
+    final fetched = await _fetchPokemonEntitiesByIds(idsToFetch);
+    for (var pokemon in fetched) {
+      filteredMap[pokemon.id] = pokemon;
+    }
+  }
+
+  Iterable<String> _extractPokemonIdsFromUrls(Set<String> urls) {
+    return urls.map((url) {
+      return UrlUtils.extractId(url);
     });
   }
 }

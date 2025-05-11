@@ -26,36 +26,12 @@ final class PokemonListSuccess extends PokemonListState {
     this.selectedTypes = const {},
   });
 
-  List<PokemonEntity> getDisplayedPokemons(
-      {SortOption sortBy = SortOption.id}) {
-    List<PokemonEntity> pokemons;
-
-    if (!showOnlyFavorites && selectedTypes.isEmpty) {
-      pokemons = pokemonMap.values.toList();
-    } else {
-      pokemons = pokemonMap.values.where((pokemon) {
-        bool matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
-        bool matchesType = selectedTypes.isEmpty ||
-            pokemon.types.any((type) => selectedTypes.contains(type.name));
-
-        return matchesFavorite && matchesType;
-      }).toList();
-    }
-
-    switch (sortBy) {
-      case SortOption.id:
-        pokemons.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
-        break;
-      case SortOption.name:
-        pokemons.sort((a, b) => a.name.compareTo(b.name));
-        break;
-      case SortOption.type:
-        pokemons
-            .sort((a, b) => a.types.first.name.compareTo(b.types.first.name));
-        break;
-    }
-
-    return pokemons;
+  List<PokemonEntity> getPokemons() {
+    return PokemonDisplayHelper.getDisplayedPokemons(
+      pokemon: pokemonMap,
+      showOnlyFavorites: showOnlyFavorites,
+      selectedTypes: selectedTypes,
+    );
   }
 
   @override

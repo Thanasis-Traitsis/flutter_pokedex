@@ -4,6 +4,7 @@ class AppStrings {
   static const String unableToLoadUrls = 'Unable to load pokemon urls';
   static const String unableToLoadDetails = 'Unable to load pokemon details';
   static const String failedToFetch = 'Failed to fetch Pokémon';
+  static const String failedToLoad = 'Failed to load Pokémon';
   static const String emptyFiltersPokemon = 'There are no Pokémon with the filters you chose';
 
   static const String filterHeader = 'Filter Options';

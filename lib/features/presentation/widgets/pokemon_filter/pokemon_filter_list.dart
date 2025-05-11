@@ -1,5 +1,5 @@
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
-import 'package:bloc_pagination/core/utils/filter_chip_utils.dart';
+import 'package:bloc_pagination/core/widgets/shape_filter_chip.dart';
 import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pokemon_filter_delete_button.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class PokemonFilterList extends StatelessWidget {
                     padding: EdgeInsets.only(
                       left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
                     ),
-                    child: shapeFilterChip(key: filter.key, value: val),
+                    child: ShapeFilterChip(key: filter.key, value: val),
                   ));
                 }
               } else {
@@ -32,7 +32,7 @@ class PokemonFilterList extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
                   ),
-                  child: shapeFilterChip(key: filter.key, value: filter.value),
+                  child: ShapeFilterChip(key: filter.key, value: filter.value),
                 ));
               }
             });

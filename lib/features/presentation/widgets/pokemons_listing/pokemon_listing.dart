@@ -13,8 +13,7 @@ class PokemonListing extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case PokemonListSuccess success:
-            return PokemonListingSuccess(
-                pokemons: success.getDisplayedPokemons());
+            return PokemonListingSuccess(pokemons: success.getPokemons());
           case PokemonListError error:
             return Center(
               child: Text(error.message),
