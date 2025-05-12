@@ -19,22 +19,6 @@ class AppTheme {
         onSurface: chosenColor.whiteColor,
         surfaceContainer: chosenColor.grayColor,
       ),
-      textTheme: TextTheme(
-        titleMedium: TextStyle(
-          fontSize: AppSizes.titleNormal,
-          color: chosenColor.textColor,
-          fontWeight: FontWeight.bold,
-        ),
-        titleSmall: TextStyle(
-          fontSize: AppSizes.titleSmall,
-          color: chosenColor.textColor,
-          fontWeight: FontWeight.bold,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: AppSizes.textNormal,
-          color: chosenColor.textColor,
-        ),
-      ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           foregroundColor: WidgetStateProperty.all(chosenColor.whiteColor),

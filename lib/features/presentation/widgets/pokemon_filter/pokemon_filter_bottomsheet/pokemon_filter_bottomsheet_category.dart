@@ -1,4 +1,6 @@
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class PokemonFilterBottomsheetCategory extends StatelessWidget {
@@ -17,9 +19,9 @@ class PokemonFilterBottomsheetCategory extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "$title:",
-          style: Theme.of(context).textTheme.titleSmall,
+        CustomText(
+          text: "$title:",
+          textType: CustomTextType.titleSmall,
         ),
         spacingBetween
             ? const SizedBox(height: AppSpacing.md)

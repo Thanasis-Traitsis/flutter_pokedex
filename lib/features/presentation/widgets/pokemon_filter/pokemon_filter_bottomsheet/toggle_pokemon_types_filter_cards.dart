@@ -1,6 +1,8 @@
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/config/theme/pokemon_type_model.dart';
 import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class TogglePokemonTypesFilterCards extends StatelessWidget {
@@ -49,13 +51,10 @@ class TogglePokemonTypesFilterCards extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainer,
                 ),
               ),
-              child: Text(
-                type.name.toUpperCase(),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: isSelected
-                          ? Theme.of(context).colorScheme.surface
-                          : Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
+              child: CustomText(
+                text: type.name.toUpperCase(),
+                textType: CustomTextType.bodyMediumRegular,
+                isWhite: isSelected,
               ),
             ),
           ),

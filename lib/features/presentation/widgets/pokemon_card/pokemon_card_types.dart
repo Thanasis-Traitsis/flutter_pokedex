@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bloc_pagination/config/theme/pokemon_type_model.dart';
@@ -30,11 +31,10 @@ class PokemonCardTypes extends StatelessWidget {
               color: pokeTypes[index].color,
               borderRadius: AppDecoration.pokeTypesBorderRadius,
             ),
-            child: Text(
-              pokeTypes[index].name.toUpperCase(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface
-              ),
+            child: CustomText(
+              text: pokeTypes[index].name.toUpperCase(),
+              textType: CustomTextType.bodyMediumRegular,
+              isWhite: true,
             ),
           );
         },

@@ -1,6 +1,8 @@
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class PokemonFilterBottomsheetContainer extends StatelessWidget {
@@ -26,9 +28,9 @@ class PokemonFilterBottomsheetContainer extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppStrings.filterHeader,
-              style: Theme.of(context).textTheme.titleMedium,
+            CustomText(
+              text: AppStrings.filterHeader,
+              textType: CustomTextType.titleMedium,
             ),
             const SizedBox(height: AppSpacing.xs),
             Divider(thickness: AppDecoration.filterDividerWidth),

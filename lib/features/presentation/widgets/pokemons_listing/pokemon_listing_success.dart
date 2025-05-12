@@ -1,4 +1,6 @@
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +34,10 @@ class _PokemonListingSuccessState extends State<PokemonListingSuccess> {
       },
       child: widget.pokemons.isEmpty
           ? Center(
-              child: Text(AppStrings.emptyFiltersPokemon),
+              child: CustomText(
+                text: AppStrings.emptyFiltersPokemon,
+                textType: CustomTextType.bodyMediumRegular,
+              ),
             )
           : ListView.builder(
               cacheExtent: 350,

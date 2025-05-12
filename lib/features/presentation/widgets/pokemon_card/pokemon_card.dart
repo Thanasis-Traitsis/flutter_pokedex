@@ -1,6 +1,8 @@
+import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/core/constants/app_decoration.dart';
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
 import 'package:bloc_pagination/core/utils/extensions/pokemon_text.dart';
+import 'package:bloc_pagination/core/widgets/custom_text.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_favorite_icon.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_image.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_card/pokemon_card_types.dart';
@@ -47,11 +49,11 @@ class PokemonCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            pokemon.name.formatPokemonName(),
+                          CustomText(
+                            text: pokemon.name.formatPokemonName(),
+                            textType: CustomTextType.titleMedium,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           SizedBox(
                             height: AppSpacing.xs,
@@ -73,11 +75,9 @@ class PokemonCard extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: Text(
-                    pokemon.id.convertPokemonId(),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                  child: CustomText(
+                    text: pokemon.id.convertPokemonId(),
+                    textType: CustomTextType.bodyMediumBold,
                   ),
                 ),
               ],
