@@ -1,17 +1,17 @@
 import 'package:bloc_pagination/core/constants/sort_options.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
+import 'package:bloc_pagination/features/domain/entities/pokemon_filter_entity.dart';
 
 class PokemonDisplayHelper {
   static List<PokemonEntity> getDisplayedPokemons({
     required Map<String, PokemonEntity> pokemon,
-    required bool showOnlyFavorites,
-    required Set<String> selectedTypes,
+    required PokemonFiltersEntity filterEntity,
     SortOption sortBy = SortOption.id,
   }) {
     List<PokemonEntity> filtered = pokemon.values.where((pokemon) {
-      final matchesFavorite = !showOnlyFavorites || pokemon.isFavorite;
-      final matchesType = selectedTypes.isEmpty ||
-          pokemon.types.any((type) => selectedTypes.contains(type.name));
+      final matchesFavorite = !filterEntity.showFavorites || pokemon.isFavorite;
+      final matchesType = filterEntity.types.isEmpty ||
+          pokemon.types.any((type) => filterEntity.types.contains(type.name));
 
       return matchesFavorite && matchesType;
     }).toList();

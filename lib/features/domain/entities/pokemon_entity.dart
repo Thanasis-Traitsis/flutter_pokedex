@@ -1,4 +1,4 @@
-import 'package:bloc_pagination/config/theme/pokemon_type_model.dart';
+import 'package:bloc_pagination/core/models/pokemon_type_model.dart';
 
 class PokemonEntity {
   final String id;

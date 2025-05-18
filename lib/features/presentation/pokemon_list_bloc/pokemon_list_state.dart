@@ -15,22 +15,19 @@ final class PokemonListSuccess extends PokemonListState {
   final Map<String, PokemonEntity> pokemonMap;
   final int pagination;
   final int favoritePokemons;
-  final bool showOnlyFavorites;
-  final Set<String> selectedTypes;
+  final PokemonFilterState filterState;
 
   const PokemonListSuccess({
     required this.pokemonMap,
     this.pagination = 0,
     this.favoritePokemons = 0,
-    this.showOnlyFavorites = false,
-    this.selectedTypes = const {},
+    required this.filterState,
   });
 
   List<PokemonEntity> getPokemons() {
     return PokemonDisplayHelper.getDisplayedPokemons(
       pokemon: pokemonMap,
-      showOnlyFavorites: showOnlyFavorites,
-      selectedTypes: selectedTypes,
+      filterEntity: filterState.selectedFilters,
     );
   }
 
@@ -39,8 +36,6 @@ final class PokemonListSuccess extends PokemonListState {
         pokemonMap,
         pagination,
         favoritePokemons,
-        showOnlyFavorites,
-        selectedTypes
       ];
 }
 

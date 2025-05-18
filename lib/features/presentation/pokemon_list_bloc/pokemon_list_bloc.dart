@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:bloc_pagination/core/constants/api/api_constants.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
-import 'package:bloc_pagination/core/utils/url_utils.dart';
 import 'package:bloc_pagination/features/domain/entities/pokemon_entity.dart';
+import 'package:bloc_pagination/features/domain/utils/pokemon_filter_service.dart';
 import 'package:bloc_pagination/features/presentation/helpers/pokemon_display_helper.dart';
 import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +18,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   late final StreamSubscription filterSubscription;
   late final SharedPreferences prefs;
   late final List<String> favoriteIds;
+  late final PokemonFilterService filterService;
 
   final Map<String, PokemonEntity> pokemonMap = {};
   Map<String, PokemonEntity> filteredMap = {};
@@ -27,19 +27,11 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   final int limit = 30;
 
   bool canFetchMore = true;
-  bool showOnlyFavorites = false;
-  Set<String> selectedTypes = {};
   bool isFiltering = false;
 
   PokemonListBloc(this.filterBloc) : super(PokemonListInitial()) {
     filterSubscription = filterBloc.stream.listen((filterState) {
-      showOnlyFavorites =
-          filterState.selectedFilters[AppStrings.filterStateFavoriteKey] ??
-              false;
-      selectedTypes =
-          filterState.selectedFilters[AppStrings.filterStateTypesKey] ?? {};
-
-      if (showOnlyFavorites || selectedTypes.isNotEmpty) {
+      if (filterState.selectedFilters.isNotEmpty) {
         isFiltering = true;
         if (filteredMap.isEmpty) {
           filteredMap = Map.from(pokemonMap);
@@ -61,6 +53,8 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       InitialFetch event, Emitter<PokemonListState> emit) async {
     prefs = await SharedPreferences.getInstance();
     favoriteIds = prefs.getStringList(AppStrings.prefsFavoritePokemonIds) ?? [];
+    filterService =
+        PokemonFilterService(prefs: prefs, favoriteIds: favoriteIds);
 
     emit(PokemonListLoading());
     await _fetchPokemons(emit, chosenLimit: event.firstPokemon);
@@ -149,10 +143,12 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
     emit(PokemonListLoading());
 
     try {
-      if (showOnlyFavorites) {
-        await _loadUnloadedFavoritePokemons();
-      } else if (selectedTypes.isNotEmpty) {
-        await _loadPokemonsBySelectedTypes();
+      if (isFiltering) {
+        filteredMap = await filterService.applyFilters(
+          pokemonMap: pokemonMap,
+          filteredMap: filteredMap,
+          selectedFilters: filterBloc.state.selectedFilters,
+        );
       }
 
       _emitSuccessState(
@@ -160,8 +156,8 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
         currentMap: isFiltering ? filteredMap : pokemonMap,
       );
     } catch (e) {
-      emit(
-          PokemonListError(message: "${AppStrings.failedToLoad}: ${e.toString()}"));
+      emit(PokemonListError(
+          message: "${AppStrings.failedToLoad}: ${e.toString()}"));
     }
   }
 
@@ -171,8 +167,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       pokemonMap: currentMap ?? pokemonMap,
       pagination: pagination,
       favoritePokemons: favoriteIds.length,
-      showOnlyFavorites: showOnlyFavorites,
-      selectedTypes: selectedTypes,
+      filterState: filterBloc.state,
     ));
   }
 
@@ -185,50 +180,6 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   void _sortListOfStrings(List<String> list) {
     list.sort((a, b) {
       return int.parse(a).compareTo(int.parse(b));
-    });
-  }
-
-  Future<void> _loadUnloadedFavoritePokemons() async {
-    final unloadedIds = favoriteIds.where((id) => !filteredMap.containsKey(id));
-
-    if (unloadedIds.isEmpty) return;
-
-    final List<PokemonEntity> fetchedPokemon = await _fetchPokemonEntitiesByIds(unloadedIds);
-    for (var pokemon in fetchedPokemon) {
-      filteredMap[pokemon.id] = pokemon;
-    }
-  }
-
-  Future<List<PokemonEntity>> _fetchPokemonEntitiesByIds(
-      Iterable<String> ids) async {
-    final results = await Future.wait(ids.map((id) {
-      return PokemonRepositories().fetchPokemonDetails(
-        pokemonUrl: ApiConstants.pokemonDetails(id),
-        favoritePokemons: favoriteIds,
-      );
-    }));
-
-    return results.whereType<PokemonEntity>().toList();
-  }
-
-  Future<void> _loadPokemonsBySelectedTypes() async {
-    final urls = await PokemonRepositories().getPokemonUrlFromType(
-      favoriteIds: favoriteIds,
-      types: selectedTypes,
-    );
-
-    final idsToFetch = _extractPokemonIdsFromUrls(urls)
-        .where((id) => !filteredMap.containsKey(id));
-
-    final fetched = await _fetchPokemonEntitiesByIds(idsToFetch);
-    for (var pokemon in fetched) {
-      filteredMap[pokemon.id] = pokemon;
-    }
-  }
-
-  Iterable<String> _extractPokemonIdsFromUrls(Set<String> urls) {
-    return urls.map((url) {
-      return UrlUtils.extractId(url);
     });
   }
 }

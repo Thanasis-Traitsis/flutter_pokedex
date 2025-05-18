@@ -1,5 +1,5 @@
 import 'package:bloc_pagination/core/constants/app_spacing.dart';
-import 'package:bloc_pagination/core/widgets/shape_filter_chip.dart';
+import 'package:bloc_pagination/features/presentation/helpers/filter_chips_helper.dart';
 import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:bloc_pagination/features/presentation/widgets/pokemon_filter/pokemon_filter_delete_button.dart';
 import 'package:flutter/material.dart';
@@ -15,27 +15,8 @@ class PokemonFilterList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: BlocBuilder<PokemonFilterBloc, PokemonFilterState>(
           builder: (context, state) {
-            final List<Widget> filterChips = [];
-
-            state.selectedFilters.entries.forEach((filter) {
-              if (filter.value is Iterable) {
-                for (String val in filter.value) {
-                  filterChips.add(Padding(
-                    padding: EdgeInsets.only(
-                      left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
-                    ),
-                    child: ShapeFilterChip(key: filter.key, value: val),
-                  ));
-                }
-              } else {
-                filterChips.add(Padding(
-                  padding: EdgeInsets.only(
-                    left: filterChips.isEmpty ? AppSpacing.md : AppSpacing.xs,
-                  ),
-                  child: ShapeFilterChip(key: filter.key, value: filter.value),
-                ));
-              }
-            });
+            final List<Widget> filterChips = FilterChipsHelper()
+                .updateFilterChips(selectedFilters: state.selectedFilters);
 
             if (filterChips.length > 1) {
               filterChips.add(PokemonFilterDeleteButton());

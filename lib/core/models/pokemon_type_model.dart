@@ -60,47 +60,47 @@ extension PokemonTypeExtension on PokemonType {
         return Colors.blueGrey.shade400;
       case PokemonType.fairy:
         return Colors.pink.shade300;
-      }
+    }
   }
 
-String get name {
-  switch (this) {
-    case PokemonType.normal:
-      return "normal";
-    case PokemonType.fire:
-      return "fire";
-    case PokemonType.water:
-      return "water";
-    case PokemonType.grass:
-      return "grass";
-    case PokemonType.electric:
-      return "electric";
-    case PokemonType.ice:
-      return "ice";
-    case PokemonType.fighting:
-      return "fighting";
-    case PokemonType.poison:
-      return "poison";
-    case PokemonType.ground:
-      return "ground";
-    case PokemonType.flying:
-      return "flying";
-    case PokemonType.psychic:
-      return "psychic";
-    case PokemonType.bug:
-      return "bug";
-    case PokemonType.rock:
-      return "rock";
-    case PokemonType.ghost:
-      return "ghost";
-    case PokemonType.dark:
-      return "dark";
-    case PokemonType.dragon:
-      return "dragon";
-    case PokemonType.steel:
-      return "steel";
-    case PokemonType.fairy:
-      return "fairy";
+  String get name {
+    switch (this) {
+      case PokemonType.normal:
+        return "normal";
+      case PokemonType.fire:
+        return "fire";
+      case PokemonType.water:
+        return "water";
+      case PokemonType.grass:
+        return "grass";
+      case PokemonType.electric:
+        return "electric";
+      case PokemonType.ice:
+        return "ice";
+      case PokemonType.fighting:
+        return "fighting";
+      case PokemonType.poison:
+        return "poison";
+      case PokemonType.ground:
+        return "ground";
+      case PokemonType.flying:
+        return "flying";
+      case PokemonType.psychic:
+        return "psychic";
+      case PokemonType.bug:
+        return "bug";
+      case PokemonType.rock:
+        return "rock";
+      case PokemonType.ghost:
+        return "ghost";
+      case PokemonType.dark:
+        return "dark";
+      case PokemonType.dragon:
+        return "dragon";
+      case PokemonType.steel:
+        return "steel";
+      case PokemonType.fairy:
+        return "fairy";
+    }
   }
-}
 }
