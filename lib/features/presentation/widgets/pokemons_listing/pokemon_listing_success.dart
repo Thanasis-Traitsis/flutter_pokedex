@@ -1,6 +1,8 @@
 import 'package:bloc_pagination/config/theme/custom_text_type.dart';
 import 'package:bloc_pagination/core/constants/app_strings.dart';
 import 'package:bloc_pagination/core/widgets/custom_text.dart';
+import 'package:bloc_pagination/features/domain/entities/pokemon_filter_entity.dart';
+import 'package:bloc_pagination/features/presentation/pokemon_filter_bloc/pokemon_filter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,14 +24,34 @@ class PokemonListingSuccess extends StatefulWidget {
 }
 
 class _PokemonListingSuccessState extends State<PokemonListingSuccess> {
+  final ScrollController _scrollController = ScrollController();
+  PokemonFiltersEntity? _previousFilters;
   bool isFetchingMore = false;
+
+  @override
+  void initState() {
+    _previousFilters = context.read<PokemonFilterBloc>().state.selectedFilters;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<PokemonListBloc, PokemonListState>(
       listener: (context, state) {
-        if (state is PokemonListSuccess) {
+        if (state is PokemonListSuccess) {   
           isFetchingMore = false;
+
+          if(_previousFilters != null && _previousFilters!.isNotEmpty) {
+            _scrollController.jumpTo(0);
+          }
+
+          _previousFilters = state.filterState.selectedFilters;
         }
       },
       child: widget.pokemons.isEmpty
@@ -40,6 +62,7 @@ class _PokemonListingSuccessState extends State<PokemonListingSuccess> {
               ),
             )
           : ListView.builder(
+              controller: _scrollController,
               cacheExtent: 350,
               itemCount: widget.pokemons.length,
               itemBuilder: (context, index) {
